@@ -1,6 +1,7 @@
 package io.github.tt432.marksmanelite.guns;
 
 import io.github.tt432.marksmanelite.MarksmanElite;
+import io.github.tt432.marksmanelite.player.PlayerGunState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -24,47 +25,42 @@ public class TestingGun extends Item {
         return InteractionResultHolder.success(player.getItemInHand(usedHand));
     }
 
-
     //TODO 还是改为客户端拦截鼠标左键 然后发包给服务端生成子弹
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        shoot(player);
         return true;
     }
 
     @SubscribeEvent
     public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntity().getItemInHand(event.getHand()).getItem() instanceof TestingGun gun) {
+        if (event.getEntity().getItemInHand(event.getHand()).getItem() instanceof TestingGun) {
             event.setCanceled(true);
-            gun.shoot(event.getEntity());
         }
     }
 
-    @SubscribeEvent
-    public static void onLeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
-        if (event.getEntity().getItemInHand(event.getHand()).getItem() instanceof TestingGun gun) {
-            gun.shoot(event.getEntity());
-        }
+    public void onLeftPress(Player player, ItemStack stack, PlayerGunState state){
+    }
+
+    public void onLeftPressTick(Player player, ItemStack stack, PlayerGunState state,int deltaTicker){
+        shoot(player);
+    }
+
+    public void onLeftRelease(Player player, ItemStack stack, PlayerGunState state){
     }
 
     public void shoot(Player player) {
-        if (!player.level().isClientSide) {
-            Level level = player.level();
+        Level level = player.level();
 
-            Vec3 lookVec = player.getLookAngle();
-            double speed = 5.0; // 子弹速度
+        Vec3 lookVec = player.getLookAngle();
+        double speed = 5.0; // 子弹速度
 
-            // 创建子弹实体
-            BulletEntity bullet = new BulletEntity(level, player, lookVec.scale(speed));
-            Vec3 eyePos = player.getEyePosition(0);//感觉有点偏高啊？
-            bullet.setPos(eyePos.x, eyePos.y, eyePos.z);
+        // 创建子弹实体
+        BulletEntity bullet = new BulletEntity(level, player, lookVec.scale(speed));
+        Vec3 eyePos = player.getEyePosition(0);//感觉有点偏高啊？
+        bullet.setPos(eyePos.x, eyePos.y, eyePos.z);
 
-            level.addFreshEntity(bullet);
-
-            // 消耗耐久（如果需要）
-            // stack.hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(hand));
-        }
+        level.addFreshEntity(bullet);
     }
 
 
