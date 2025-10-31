@@ -5,6 +5,7 @@ import io.github.tt432.marksmanelite.player.PlayerGunState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,10 +23,14 @@ public class TestingGun extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        player.startUsingItem(usedHand);
+        return InteractionResultHolder.fail(player.getItemInHand(usedHand));
     }
 
-    //TODO 还是改为客户端拦截鼠标左键 然后发包给服务端生成子弹
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return Integer.MAX_VALUE;
+    }
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
@@ -53,7 +58,7 @@ public class TestingGun extends Item {
         Level level = player.level();
 
         Vec3 lookVec = player.getLookAngle();
-        double speed = 5.0; // 子弹速度
+        double speed = 20.0; // 子弹速度
 
         // 创建子弹实体
         BulletEntity bullet = new BulletEntity(level, player, lookVec.scale(speed));
