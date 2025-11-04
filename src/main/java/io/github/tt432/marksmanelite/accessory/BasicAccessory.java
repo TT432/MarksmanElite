@@ -2,6 +2,7 @@ package io.github.tt432.marksmanelite.accessory;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import io.github.tt432.marksmanelite.MarksmanElite;
 import io.github.tt432.marksmanelite.NewRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -44,5 +45,18 @@ public abstract class BasicAccessory<T extends BasicAccessory<T>> {
 
     public T cast() {
         return (T) this;
+    }
+
+    public ResourceLocation getId() {
+        return MarksmanElite.getRegistry(NewRegistry.ACCESSORY_DATAPACK_REGKEY).getKey(this);
+    }
+
+    public ResourceLocation getTypeId() {
+        return NewRegistry.ACCESSORY_TYPE.getKey(getType());
+    }
+
+    @Override
+    public String toString() {
+        return "MarksmanElite-Accessory(id=" + getId() + ",type=" + getTypeId() + ")";
     }
 }

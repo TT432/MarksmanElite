@@ -3,7 +3,6 @@ package io.github.tt432.marksmanelite;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import io.github.tt432.marksmanelite.accessory.*;
-import io.github.tt432.marksmanelite.guns.AbstractGun;
 import io.github.tt432.marksmanelite.guns.BulletEntity;
 import io.github.tt432.marksmanelite.guns.GunDataComponent;
 import io.github.tt432.marksmanelite.player.PlayerGunState;
@@ -22,10 +21,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.jetbrains.annotations.NotNull;
 
 @Mod(MarksmanElite.MODID)
 public class MarksmanElite {
@@ -54,7 +53,7 @@ public class MarksmanElite {
             ACCESSORY_REG.register("muzzle", () -> MuzzleAccessory.CODEC);
 
     public static final DeferredHolder<MapCodec<? extends BasicAccessory<?>>, MapCodec<LowerHangingAccessory>> LOWER_HANGING_ACCESSORY =
-            ACCESSORY_REG.register("lower_hanging", () -> LowerHangingAccessory.CODEC);
+            ACCESSORY_REG.register("lowerHanging", () -> LowerHangingAccessory.CODEC);
 
     public static final DeferredHolder<MapCodec<? extends BasicAccessory<?>>, MapCodec<MagazineAccessory>> MAGAZINE_ACCESSORY =
             ACCESSORY_REG.register("magazine", () -> MagazineAccessory.CODEC);
@@ -100,6 +99,10 @@ public class MarksmanElite {
 
 
     public static <T> Codec<T> byNameCodec(ResourceKey<Registry<T>> key) {
-        return ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(key).byNameCodec();
+        return getRegistry(key).byNameCodec();
+    }
+
+    public static <T> @NotNull Registry<T> getRegistry(ResourceKey<Registry<T>> key) {
+        return ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(key);
     }
 }
