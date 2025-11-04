@@ -53,7 +53,7 @@ public class MarksmanElite {
             ACCESSORY_REG.register("muzzle", () -> MuzzleAccessory.CODEC);
 
     public static final DeferredHolder<MapCodec<? extends BasicAccessory<?>>, MapCodec<LowerHangingAccessory>> LOWER_HANGING_ACCESSORY =
-            ACCESSORY_REG.register("lowerHanging", () -> LowerHangingAccessory.CODEC);
+            ACCESSORY_REG.register("lower_hanging", () -> LowerHangingAccessory.CODEC);
 
     public static final DeferredHolder<MapCodec<? extends BasicAccessory<?>>, MapCodec<MagazineAccessory>> MAGAZINE_ACCESSORY =
             ACCESSORY_REG.register("magazine", () -> MagazineAccessory.CODEC);

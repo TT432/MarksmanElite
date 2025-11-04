@@ -2,6 +2,7 @@ package io.github.tt432.marksmanelite.guns;
 
 import io.github.tt432.marksmanelite.MarksmanElite;
 import io.github.tt432.marksmanelite.player.PlayerGunState;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -105,6 +106,11 @@ public class AbstractGun extends Item {
         AmmoBehavior(BiConsumer<Player, ItemStack> behavior) {
             this.behavior = behavior;
         }
+    }
+
+    @Override
+    public DataComponentMap components() {
+        return super.components();
     }
 
     public record InitialAccessory(ResourceLocation scope, ResourceLocation muzzle, ResourceLocation lowerHanging,
