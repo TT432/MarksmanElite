@@ -11,19 +11,19 @@ public class MagazineAccessory extends BasicAccessory<MagazineAccessory> {
     public static final MapCodec<MagazineAccessory> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             ValueProvider.CODEC.fieldOf("values").forGetter(BasicAccessory::getValueProvider),
             ResourceLocation.CODEC.fieldOf("model").forGetter(BasicAccessory::getModelLocation),
-            Codec.INT.fieldOf("max_ammo").forGetter(MagazineAccessory::getMaxAmmo)
+            ResourceLocation.CODEC.fieldOf("ammo_type").forGetter(MagazineAccessory::getAmmoType)
     ).apply(i, MagazineAccessory::new));
 
-    public final int maxAmmoCount;
+    public final ResourceLocation ammoType;
 
-    public MagazineAccessory(ValueProvider valueProvider, ResourceLocation modelLocation, int maxAmmoCount) {
+    public MagazineAccessory(ValueProvider valueProvider, ResourceLocation modelLocation, ResourceLocation ammoType) {
         super(valueProvider, modelLocation);
-        this.maxAmmoCount = Math.max(1, maxAmmoCount);
+        this.ammoType = ammoType;
     }
 
 
-    public int getMaxAmmo() {
-        return maxAmmoCount;
+    public ResourceLocation getAmmoType() {
+        return ammoType;
     }
 
     @Override

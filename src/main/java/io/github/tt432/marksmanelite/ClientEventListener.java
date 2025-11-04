@@ -1,12 +1,10 @@
 package io.github.tt432.marksmanelite;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import io.github.tt432.marksmanelite.guns.AbstractGun;
 import io.github.tt432.marksmanelite.player.MouseClickPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.NoopRenderer;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
