@@ -6,7 +6,9 @@ import io.github.tt432.marksmanelite.accessory.*;
 import io.github.tt432.marksmanelite.guns.BulletEntity;
 import io.github.tt432.marksmanelite.guns.GunDataComponent;
 import io.github.tt432.marksmanelite.player.PlayerGunState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -16,8 +18,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -103,6 +107,10 @@ public class MarksmanElite {
     }
 
     public static <T> @NotNull Registry<T> getRegistry(ResourceKey<Registry<T>> key) {
-        return ServerLifecycleHooks.getCurrentServer().registryAccess().registryOrThrow(key);
+        return getRegistryAccess().registryOrThrow(key);
+    }
+
+    public static RegistryAccess getRegistryAccess(){
+        return FMLEnvironment.dist == Dist.DEDICATED_SERVER ?  ServerLifecycleHooks.getCurrentServer().registryAccess() : Minecraft.getInstance().getConnection().registryAccess();
     }
 }
