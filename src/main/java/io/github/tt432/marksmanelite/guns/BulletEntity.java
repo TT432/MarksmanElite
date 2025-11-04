@@ -11,16 +11,18 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class BulletEntity extends AbstractHurtingProjectile{
+public class BulletEntity extends AbstractHurtingProjectile {
     private int life;
-    private final float damage = 5.0f; // 子弹伤害
+    public final float damage; // 子弹伤害
 
     public BulletEntity(EntityType<BulletEntity> type, Level level) {
         super(type, level);
+        this.damage = 5f;
     }
 
-    public BulletEntity(Level level, LivingEntity shooter, Vec3 movement) {
+    public BulletEntity(Level level, LivingEntity shooter, Vec3 movement, double damage) {
         super(MarksmanElite.BULLET_ENTITY.get(), shooter, movement, level);
+        this.damage = (float) damage;
     }
 
     @Override

@@ -6,19 +6,22 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 @EventBusSubscriber(modid = MarksmanElite.MODID)
-public class TestingGun extends Item {
-    public TestingGun() {
+public class AbstractGun extends Item {
+    public final GunType gunType;
+
+    public AbstractGun(GunType gunType) {
         super(new Properties().fireResistant().stacksTo(1));
+        this.gunType = gunType;
     }
 
     @Override
@@ -39,34 +42,38 @@ public class TestingGun extends Item {
 
     @SubscribeEvent
     public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntity().getItemInHand(event.getHand()).getItem() instanceof TestingGun) {
+        if (event.getEntity().getItemInHand(event.getHand()).getItem() instanceof AbstractGun) {
             event.setCanceled(true);
         }
     }
 
-    public void onLeftPress(Player player, ItemStack stack, PlayerGunState state){
+
+    public void startShooting(Player player, ItemStack stack, PlayerGunState state) {
     }
 
-    public void onLeftPressTick(Player player, ItemStack stack, PlayerGunState state,int deltaTicker){
-        shoot(player);
+    public void onShootingTick(Player player, ItemStack stack, PlayerGunState state, int shootingTicker) {
+        double attachSpeed = player.getAttribute(Attributes.ATTACK_SPEED).getValue();
+        if ((int) (shootingTicker / attachSpeed) > (int) ((shootingTicker - 1) / attachSpeed)) {//射速处理器
+            shoot(player, stack);
+        }
     }
 
-    public void onLeftRelease(Player player, ItemStack stack, PlayerGunState state){
+    public void stopShooting(Player player, ItemStack stack, PlayerGunState state) {
     }
 
-    public void shoot(Player player) {
-        Level level = player.level();
-
-        Vec3 lookVec = player.getLookAngle();
-        double speed = 20.0; // 子弹速度
-
-        // 创建子弹实体
-        BulletEntity bullet = new BulletEntity(level, player, lookVec.scale(speed));
-        Vec3 eyePos = player.getEyePosition(0);//感觉有点偏高啊？
-        bullet.setPos(eyePos.x, eyePos.y, eyePos.z);
-
-        level.addFreshEntity(bullet);
+    public void startAiming(Player player, ItemStack stack, PlayerGunState state){
     }
 
+    public void finishAiming(Player player, ItemStack stack, PlayerGunState state){
+    }
 
+    public void stopAiming(Player player, ItemStack stack, PlayerGunState state, boolean aimingFinished){
+    }
+
+    public void shoot(Player player, ItemStack gun) {
+        //TODO 在这里附加视角动画效果
+        if (player.level().isClientSide) return;//只在服务端创建子弹
+        //TODO 扣除子弹
+        gunType.ammoBehavior().behavior.accept(player, gun);
+    }
 }

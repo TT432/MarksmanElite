@@ -18,8 +18,6 @@ public class CommonEventListener {
 
     @SubscribeEvent
     public static void playerTick(PlayerTickEvent.Post event) {
-        if (!event.getEntity().level().isClientSide()) {
-            event.getEntity().getData(MarksmanElite.PLAYER_GUN_STATE_ATTACHMENT).tick(event.getEntity());
-        }
+        event.getEntity().getData(MarksmanElite.PLAYER_GUN_STATE_ATTACHMENT).tick(event.getEntity());
     }
 }
